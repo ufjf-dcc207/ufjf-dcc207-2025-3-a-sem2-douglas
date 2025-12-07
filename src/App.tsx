@@ -33,10 +33,6 @@ function embaralha<T>(baralho: T[]): T[] {
   }
   return novoBaralho;
 }
-
-
-
-
 function App() {
   const [novoBaralho, setNovoBaralho] = useState<CardData[]>(cards);
   const [jogoComecou, setJogoComecou] = useState(false);
@@ -51,19 +47,18 @@ function App() {
   return (
     <div className="memoria">
       <h1>🧠 Jogo da Memória</h1>
-      {!jogoComecou && (
-        <button onClick={iniciarJogo}>Começar Jogo</button>
-      )}
       <div className="grid">
         {novoBaralho.map((card) => (
           <Card key={card.id} {...card} />
         ))}
       </div>
-      {jogoComecou && (
-        <button onClick={}>
-          REINICIAR JOGO
-        </button>
-      )}
+        {!jogoComecou && (
+          <button className="botao" onClick={iniciarJogo}>Começar Jogo</button>
+        )}
+        {jogoComecou && (
+          <button className="botao" onClick={iniciarJogo}>REINICIAR JOGO</button>
+        )}
+      
     </div>
   );
 }
