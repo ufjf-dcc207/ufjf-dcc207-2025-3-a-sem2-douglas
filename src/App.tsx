@@ -2,6 +2,37 @@ import { Card } from "./carta.tsx";
 import "./arte.css";
 import {useState} from "react";
 
+type CardProps = {
+  id: number;
+  value: string;
+  nome: string;
+  virada: boolean;
+  virarCarta: (id: number) => void;
+};
+
+export function Carta({ value, virada, id, virarCarta }: CardProps) {
+  return (
+    <div 
+      className="card" 
+      onClick={() => virarCarta(id)} 
+      style={{
+        cursor: "pointer",
+        fontSize: "2rem",
+        width: "60px",
+        height: "80px",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        border: "1px solid black",
+        borderRadius: "8px",
+        backgroundColor: virada ? "#fff" : "#999",
+      }}
+    >
+      {virada ? value : "❓"}
+    </div>
+  );
+}
+
 type CardData = {
   id: number;
   value: string;
