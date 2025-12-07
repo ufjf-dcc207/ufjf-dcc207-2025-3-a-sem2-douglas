@@ -67,12 +67,53 @@ function embaralha<T>(baralho: T[]): T[] {
 function App() {
   const [novoBaralho, setNovoBaralho] = useState<CardData[]>(cards);
   const [jogoComecou, setJogoComecou] = useState(false);
-  
+  const [cartasViradasIds, setCartasViradasIds] = useState<number[]>([])
+
   function iniciarJogo(){
       setNovoBaralho(embaralha(cards));
-      const cartasViradas = novoBaralho.map(card => ({ ...card, virada: false}));
-      setNovoBaralho(cartasViradas);
+      const cartasViradasIds = novoBaralho.map(card => ({ ...card, virada: false}));
+      setNovoBaralho(cartasViradasIds);
       setJogoComecou(true);
+      setCartasViradasIds([]);
+  }
+
+  
+  function virarCarta(id: number) {
+    const cartaClicada = novoBaralho.find(card => card.id === id);
+    if (!cartaClicada || cartaClicada.virada){
+        return;
+    } 
+    if (cartasViradasIds.length === 2){
+      return;
+    } 
+
+    const novoEstado = novoBaralho.map(card =>
+      card.id === id ? { ...card, virada: true } : card
+    );
+    setNovoBaralho(novoEstado);
+    const novasViradas = [...cartasViradasIds, id];
+    setCartasViradasIds(novasViradas);
+
+    if (novasViradas.length === 2) {
+      const [id1, id2] = novasViradas;
+      const carta1 = novoEstado.find(card => card.id === id1)!;
+      const carta2 = novoEstado.find(card => card.id === id2)!;
+
+      if (carta1.nome !== carta2.nome) {
+        setTimeout(() => {
+          setNovoBaralho(estadoAtual =>
+            estadoAtual.map(card =>
+              card.id === id1 || card.id === id2
+                ? { ...card, virada: false }
+                : card
+            )
+          );
+          setCartasViradasIds([]);
+        }, 1000);
+      } else {
+        setCartasViradasIds([]);
+      }
+    }
   }
 
   return (
