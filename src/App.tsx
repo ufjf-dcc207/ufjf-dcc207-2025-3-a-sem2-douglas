@@ -1,5 +1,6 @@
 import { Card } from "./carta.tsx";
 import "./arte.css";
+import {useState} from "react";
 
 type CardData = {
   id: number;
@@ -34,17 +35,35 @@ function embaralha<T>(baralho: T[]): T[] {
 }
 
 
+
+
 function App() {
+  const [novoBaralho, setNovoBaralho] = useState<CardData[]>(cards);
+  const [jogoComecou, setJogoComecou] = useState(false);
   
+  function iniciarJogo(){
+      setNovoBaralho(embaralha(cards));
+      const cartasViradas = novoBaralho.map(card => ({ ...card, virada: false}));
+      setNovoBaralho(cartasViradas);
+      setJogoComecou(true);
+  }
+
   return (
     <div className="memoria">
       <h1>🧠 Jogo da Memória</h1>
+      {!jogoComecou && (
+        <button onClick={iniciarJogo}>Começar Jogo</button>
+      )}
       <div className="grid">
-        {cards.map((card) => (
+        {novoBaralho.map((card) => (
           <Card key={card.id} {...card} />
         ))}
       </div>
-      <button className="botao">REINICIAR JOGO</button>
+      {jogoComecou && (
+        <button onClick={}>
+          REINICIAR JOGO
+        </button>
+      )}
     </div>
   );
 }
