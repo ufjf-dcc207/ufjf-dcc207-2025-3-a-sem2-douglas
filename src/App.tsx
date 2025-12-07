@@ -1,37 +1,6 @@
-import { Card } from "./carta.tsx";
+import { Carta } from "./carta.tsx";
 import "./arte.css";
 import {useState} from "react";
-
-type CardProps = {
-  id: number;
-  value: string;
-  nome: string;
-  virada: boolean;
-  virarCarta: (id: number) => void;
-};
-
-export function Carta({ value, virada, id, virarCarta }: CardProps) {
-  return (
-    <div 
-      className="card" 
-      onClick={() => virarCarta(id)} 
-      style={{
-        cursor: "pointer",
-        fontSize: "2rem",
-        width: "60px",
-        height: "80px",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        border: "1px solid black",
-        borderRadius: "8px",
-        backgroundColor: virada ? "#fff" : "#999",
-      }}
-    >
-      {virada ? value : "❓"}
-    </div>
-  );
-}
 
 type CardData = {
   id: number;
@@ -69,14 +38,12 @@ function App() {
   const [jogoComecou, setJogoComecou] = useState(false);
   const [cartasViradasIds, setCartasViradasIds] = useState<number[]>([])
 
-  function iniciarJogo(){
-      setNovoBaralho(embaralha(cards));
-      const cartasViradasIds = novoBaralho.map(card => ({ ...card, virada: false}));
-      setNovoBaralho(cartasViradasIds);
-      setJogoComecou(true);
-      setCartasViradasIds([]);
-  }
-
+ function iniciarJogo() {
+    const baralhoEmbaralhado = embaralha(cards).map(card => ({ ...card, virada: false }));
+    setNovoBaralho(baralhoEmbaralhado);
+    setJogoComecou(true);
+    setCartasViradasIds([]);
+}
   
   function virarCarta(id: number) {
     const cartaClicada = novoBaralho.find(card => card.id === id);
@@ -121,15 +88,12 @@ function App() {
       <h1>🧠 Jogo da Memória</h1>
       <div className="grid">
         {novoBaralho.map((card) => (
-          <Card key={card.id} {...card} />
+          <Carta key={card.id} {...card} virarCarta={virarCarta} />
         ))}
       </div>
-        {!jogoComecou && (
-          <button className="botao" onClick={iniciarJogo}>Começar Jogo</button>
-        )}
-        {jogoComecou && (
-          <button className="botao" onClick={iniciarJogo}>REINICIAR JOGO</button>
-        )}
+        <button className="botao" onClick={iniciarJogo}>
+            {jogoComecou ? "REINICIAR JOGO" : "INICIAR JOGO"}
+        </button>
       
     </div>
   );
